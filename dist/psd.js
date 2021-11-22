@@ -49,11 +49,16 @@ module.exports = {
         xhr.open("GET", url, true);
         xhr.responseType = "arraybuffer";
         xhr.onload = function() {
-          var data, psd;
-          data = new Uint8Array(xhr.response || xhr.mozResponseArrayBuffer);
-          psd = new PSD(data);
-          psd.parse();
-          return resolve(psd);
+          var data, error, psd;
+          try {
+            data = new Uint8Array(xhr.response || xhr.mozResponseArrayBuffer);
+            psd = new PSD(data);
+            psd.parse();
+            return resolve(psd);
+          } catch (error1) {
+            error = error1;
+            return reject(error);
+          }
         };
         return xhr.send(null);
       });
